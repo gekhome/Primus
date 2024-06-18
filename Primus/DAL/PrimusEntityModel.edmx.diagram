@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="93f0983ae09d4c99ba29d9221080f176" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="PrimusDBModel.APOFASI_PARAMETERS" Width="2.125" PointX="0.5" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.USER_ADMINS" Width="1.5" PointX="2.875" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.USER_SCHOOLS" Width="1.5" PointX="4.625" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΑΠΟΦΑΣΗ_ΣΙΤΙΣΗ" Width="1.875" PointX="15.375" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΑΠΟΦΑΣΗ_ΣΤΕΓΑΣΗ" Width="2.125" PointX="5.5" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΑΠΟΦΑΣΗ_ΣΥΝΕΧΕΙΑ" Width="2.125" PointX="10.5" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΑΠΟΦΑΣΗ_ΧΟΡΗΓΗΣΗ" Width="2" PointX="0.5" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.Δ_ΑΝΤΙΠΡΟΕΔΡΟΙ" Width="1.875" PointX="19.5" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.Δ_ΔΙΑΧΕΙΡΙΣΤΕΣ" Width="1.5" PointX="17.75" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.Δ_ΔΙΕΥΘΥΝΤΕΣ" Width="1.5" PointX="16" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.Δ_ΔΙΕΥΘΥΝΤΕΣ_ΓΕΝΙΚΟΙ" Width="2.125" PointX="17.125" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.Δ_ΔΙΟΙΚΗΤΕΣ" Width="1.5" PointX="19.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.Δ_ΠΡΟΙΣΤΑΜΕΝΟΙ" Width="1.875" PointX="19.625" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΙΔΙΚΟΤΗΤΕΣ" Width="1.5" PointX="2.875" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΠΙΔΟΜΑ_ΣΙΤΙΣΗ" Width="1.875" PointX="17.625" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΠΙΔΟΜΑ_ΣΤΕΓΑΣΗ" Width="2" PointX="8" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΠΙΔΟΜΑ_ΣΥΝΕΧΕΙΑ" Width="1.875" PointX="13.125" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΠΙΔΟΜΑ_ΧΟΡΗΓΗΣΗ" Width="1.875" PointX="3.125" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΠΙΔΟΤΗΣΕΙΣ_ΠΟΣΑ" Width="1.75" PointX="19.625" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΤΗ_ΣΧΟΛΕΣ_ΕΙΔΙΚΟΤΗΤΕΣ" Width="2.25" PointX="4.875" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΚΟΙΝΩΝΙΚΑ_ΚΡΙΤΗΡΙΑ" Width="2" PointX="12.125" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΜΑΘΗΤΗΣ" Width="2" PointX="7.5" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΜΑΘΗΤΗΣ_ΑΙΤΗΣΗ" Width="1.875" PointX="9.875" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΑΞΙΟΛΟΓΗΣΗ" Width="1.875" PointX="14.5" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΑΠΟΡΡΙΨΗ_ΑΙΤΙΑ" Width="2" PointX="13.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΔΗΜΟΣ" Width="1.5" PointX="12.875" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΕΓΓΡΑΦΑ_ΕΙΔΗ" Width="2" PointX="17.125" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΕΠΙΔΟΜΑΤΑ" Width="2.25" PointX="14.625" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑΚΕΣ" Width="1.875" PointX="0.5" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑΚΗ_ΕΝΟΤΗΤΑ" Width="2.5" PointX="9.625" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΣΧΟΛΕΣ_ΕΙΔΗ" Width="1.875" PointX="0.5" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΣΧΟΛΙΚΑ_ΕΤΗ" Width="1.75" PointX="5.375" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΣΧΟΛΙΚΕΣ_ΔΟΜΕΣ" Width="1.875" PointX="0.5" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΤΑΞΕΙΣ" Width="1.75" PointX="14.625" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΦΥΛΑ" Width="1.5" PointX="12.125" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlUSER_SCHOOL" Width="2" PointX="17.125" PointY="2.75" IsExpanded="true" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΠΙΔΟΜΑ_ΣΙΤΙΣΗ_ΑΠΟΦΑΣΗ_ΣΙΤΙΣΗ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΠΙΔΟΜΑ_ΣΤΕΓΑΣΗ_ΑΠΟΦΑΣΗ_ΣΤΕΓΑΣΗ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΠΙΔΟΜΑ_ΣΥΝΕΧΕΙΑ_ΑΠΟΦΑΣΗ_ΣΥΝΕΧΕΙΑ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΠΙΔΟΜΑ_ΧΟΡΗΓΗΣΗ_ΑΠΟΦΑΣΗ_ΧΟΡΗΓΗΣΗ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΙΔΙΚΟΤΗΤΕΣ_ΣΥΣ_ΣΧΟΛΕΣ_ΕΙΔΗ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΤΗ_ΣΧΟΛΕΣ_ΕΙΔΙΚΟΤΗΤΕΣ_ΕΙΔΙΚΟΤΗΤΕΣ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΤΗ_ΣΧΟΛΕΣ_ΕΙΔΙΚΟΤΗΤΕΣ_ΣΥΣ_ΣΧΟΛΙΚΑ_ΕΤΗ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΜΑΘΗΤΗΣ_ΑΙΤΗΣΗ_ΜΑΘΗΤΗΣ" ManuallyRouted="false" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΔΗΜΟΣ_ΠΕΡΙΦΕΡΕΙΑΚΗ_ΕΝΟΤΗΤΑ" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΣΧΟΛΕΣ" Width="1.75" PointX="2.875" PointY="0.75" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΕΤΗ_ΣΧΟΛΕΣ_ΕΙΔΙΚΟΤΗΤΕΣ_ΣΥΣ_ΣΧΟΛΕΣ" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΣΥΣ_ΣΧΟΛΕΣ_ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑΚΕΣ" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΣΥΣ_ΣΧΟΛΕΣ_ΣΥΣ_ΣΧΟΛΙΚΕΣ_ΔΟΜΕΣ" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΙΔΙΚΟΤΗΤΕΣ_ΕΤΟΣ_ΣΧΟΛΗ" Width="2.125" PointX="14.75" PointY="0.875" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑ" Width="1.75" PointX="7.5" PointY="0.875" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΠΕΡΙΦΕΡΕΙΑΚΗ_ΕΝΟΤΗΤΑ_ΠΕΡΙΦΕΡΕΙΑ" />
+        <EntityTypeShape EntityType="PrimusDBModel.qrySTUDENT_SELECTOR" Width="2" PointX="9.875" PointY="8.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.qrySTUDENT_INFO" Width="2" PointX="12.125" PointY="8.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΜΑΘΗΤΗΣ_ΚΟΙΝΩΝΙΚΑ" Width="2" PointX="12.125" PointY="3" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΜΑΘΗΤΗΣ_ΚΟΙΝΩΝΙΚΑ_ΜΑΘΗΤΗΣ_ΑΙΤΗΣΗ" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSTUDENT_INFO" Width="2.125" PointX="23.75" PointY="0.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSTUDENT_AITISEIS" Width="2" PointX="21.625" PointY="0.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΙΤΗΣΕΙΣ_ΑΠΟΡΡΙΨΗ" Width="2.25" PointX="28.5" PointY="0.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΙΤΗΣΕΙΣ_ΕΓΚΡΙΣΗ" Width="2.125" PointX="23.875" PointY="5.375" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΙΤΗΣΕΙΣ_ΕΚΚΡΕΜΕΙΣ" Width="2.25" PointX="26.125" PointY="0.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΙΤΗΣΕΙΣ_ΜΗΤΡΩΟ" Width="2.25" PointX="26.125" PointY="6.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΙΤΗΣΕΙΣ_ΕΠΙΣΥΝΑΨΗ" Width="2.125" PointX="21.625" PointY="5.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sumΕΠΙΔΟΜΑ_ΧΟΡΗΓΗΣΗ" Width="2.375" PointX="23.375" PointY="12.25" />
+        <EntityTypeShape EntityType="PrimusDBModel.sumΕΠΙΔΟΜΑ_ΣΥΝΕΧΕΙΑ" Width="2.375" PointX="20.75" PointY="12.25" />
+        <EntityTypeShape EntityType="PrimusDBModel.sumΕΠΙΔΟΜΑ_ΣΙΤΙΣΗ" Width="2.375" PointX="23.375" PointY="14.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sumΕΠΙΔΟΜΑ_ΣΤΕΓΑΣΗ" Width="2.375" PointX="20.75" PointY="14.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΠΟΦΑΣΕΙΣ_ΜΗΤΡΩΟ" Width="2.25" PointX="28.5" PointY="7" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΕΠΙΔΟΜΑ_ΜΗΤΡΩΟ" Width="2.125" PointX="28.625" PointY="10.875" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlEPIDOMA_ALL_DETAIL" Width="2.125" PointX="16.75" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlEPIDOMA_SITISI" Width="1.875" PointX="0.75" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlEPIDOMA_STEGASI" Width="1.875" PointX="2.875" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlEPIDOMA_SYNEXEIA" Width="2" PointX="5" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlEPIDOMA_XORIGISI" Width="1.875" PointX="7.25" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSUM_EPIDOMA_ALLTYPES" Width="2.25" PointX="9.5" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSUM_EPIDOMA_DETAIL" Width="2.125" PointX="12" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSUM_EPIDOMA_YEAR" Width="2.125" PointX="14.375" PointY="19.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.APOFASI_PARAMETERS2" Width="2" PointX="13.75" PointY="23.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΕΠΙΔΟΜΑ_ΣΙΤΙΣΗ2" Width="2.125" PointX="13.75" PointY="25.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΜΑΘΗΤΗΣ_ΑΙΤΗΣΗ2" Width="2" PointX="3.875" PointY="24.875" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΜΗΝΕΣ" Width="1.5" PointX="11.75" PointY="23.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlEPIDOMA_SITISI2" Width="2" PointX="6.125" PointY="24.875" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlΑΙΤΗΣΕΙΣ2_ΕΠΙΣΥΝΑΨΗ" Width="2.125" PointX="8.75" PointY="25.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.sumΕΠΙΔΟΜΑ_ΣΙΤΙΣΗ2_ΜΗΝΑΣ" Width="2.5" PointX="0.875" PointY="25" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΜΑΘΗΤΗΣ_ΚΟΙΝΩΝΙΚΑ2" Width="2" PointX="1" PointY="28.125" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΜΑΘΗΤΗΣ_ΚΟΙΝΩΝΙΚΑ2_ΜΑΘΗΤΗΣ_ΑΙΤΗΣΗ2" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSTUDENT_AITISEIS2" Width="2.125" PointX="16.375" PointY="25.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSTUDENT_INFO2" Width="2.125" PointX="18.875" PointY="25.75" />
+        <AssociationConnector Association="PrimusDBModel.FK_ΜΑΘΗΤΗΣ_ΑΙΤΗΣΗ2_ΜΑΘΗΤΗΣ" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΣΥΣ_ΕΤΗ" Width="1.5" PointX="9.875" PointY="23.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.ΑΠΟΦΑΣΗ_ΣΙΤΙΣΗ2" Width="2.125" PointX="11.25" PointY="25.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.APP_STATUS" Width="1.5" PointX="6.25" PointY="29.625" />
+        <EntityTypeShape EntityType="PrimusDBModel.SYS_LOGINS" Width="2" PointX="26.25" PointY="15.25" />
+        <EntityTypeShape EntityType="PrimusDBModel.sqlSCHOOL_LOGINS" Width="2" PointX="26.25" PointY="13.5" />
+        <EntityTypeShape EntityType="PrimusDBModel.dupl_STUDENT_DATA" Width="2.25" PointX="20.875" PointY="17.75" />
+        <EntityTypeShape EntityType="PrimusDBModel.UPLOADS" Width="1.875" PointX="1" PointY="30.25" />
+        <EntityTypeShape EntityType="PrimusDBModel.UPLOADS_FILES" Width="2" PointX="3.875" PointY="30.25" />
+        <AssociationConnector Association="PrimusDBModel.FK_UPLOADS_FILES_UPLOADS" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

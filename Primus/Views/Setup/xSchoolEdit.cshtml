@@ -1,0 +1,227 @@
+﻿@model Primus.Models.SchoolsViewModel
+@using Primus.DAL;
+@using Primus.Models;
+
+@{
+    ViewBag.Title = "Στοιχεία σχολής";
+    Layout = "~/Views/Shared/_LayoutMin.cshtml";
+}
+
+<link href="@Url.Content("~/Content/mvcNotify.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/mvcNotify.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    //Set autoclear of messages. Don't put this into $(document).ready.
+    //mvcNotify.autoClearTimeout = 0; //don't autoclear any types
+    mvcNotify.autoClearTimeout = 10000; //Unit of milliseconds. Requires mvcNotify.typesToAutoClear to be set to something (default behavior).
+    mvcNotify.typesToConsoleLog = "all"; //Log all types to console.
+</script>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <style>
+        .k-textbox {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.428571429;
+            color: #555555;
+            vertical-align: middle;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        }
+
+            .k-textbox:focus {
+                border-color: #66afe9;
+                outline: 0;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+            }
+    </style>
+</head>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="page-header" style="margin:5px 60px 5px 60px">
+    </div>
+    <div class="container body-content">
+        <fieldset>
+            <table class="col-md-12" style="border:solid;border-width:thin;margin:20px 20px 20px 10px">
+                <tr>
+                    <th style="background-color:#494949;padding-left:20px;padding-top:2px;padding-bottom:4px;margin-top:2px;margin-bottom:2px">
+                        <font style="font-family:'Segoe UI';font-size:large;color:white;">Στοιχεία του σχολείου</font>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "SchoolsList", "Setup", new { schoolId = Model.SCHOOL_ID }, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+                        <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">
+                            <input style="font-family:'Segoe UI';font-size:14px" type="submit" value="Αποθήκευση" class="btn btn-success" />
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.SCHOOL_NAME, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.SCHOOL_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.SCHOOL_NAME, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.SCHOOL_TYPE, new { @class = "control-label col-md-3" })
+                            @(Html.Kendo().DropDownListFor(model => model.SCHOOL_TYPE)
+                            .Name("SCHOOL_TYPE")
+                            .DataTextField("ΔΟΜΗ_ΚΕΙΜΕΝΟ")
+                            .DataValueField("ΔΟΜΗ_ΚΩΔ")
+                            .HtmlAttributes(new { style = "width:120px;" })
+                            .Filter("contains")
+                            .AutoBind(true)
+                            .DataSource(source => { source.Read(read => { read.Action("GetDomes", "Setup"); }).ServerFiltering(true); })
+                            )
+                            @Html.ValidationMessageFor(model => model.SCHOOL_TYPE, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΤΑΧ_ΔΙΕΥΘΥΝΣΗ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΤΑΧ_ΔΙΕΥΘΥΝΣΗ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΤΑΧ_ΔΙΕΥΘΥΝΣΗ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΓΡΑΜΜΑΤΕΙΑ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΓΡΑΜΜΑΤΕΙΑ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΓΡΑΜΜΑΤΕΙΑ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΦΑΞ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΦΑΞ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΦΑΞ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.EMAIL, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΤΗΛΕΦΩΝΑ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΤΗΛΕΦΩΝΑ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΤΗΛΕΦΩΝΑ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΔΙΕΥΘΥΝΤΗΣ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΔΙΕΥΘΥΝΤΗΣ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΔΙΕΥΘΥΝΤΗΣ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ, new { @class = "control-label col-md-3" })
+                            @(Html.Kendo().DropDownListFor(model => model.ΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ)
+                            .Name("ΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ")
+                            .DataTextField("GENDER")
+                            .DataValueField("GENDER_ID")
+                            .HtmlAttributes(new { style = "width:120px;" })
+                            .Filter("contains")
+                            .AutoBind(true)
+                            .DataSource(source => { source.Read(read => { read.Action("GetGenders", "Setup"); }).ServerFiltering(true); })
+                            )
+                            @Html.ValidationMessageFor(model => model.ΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΚΙΝΗΤΟ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΚΙΝΗΤΟ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΚΙΝΗΤΟ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΥΠΟΔΙΕΥΘΥΝΤΗΣ, new { @class = "control-label col-md-3" })
+                            @Html.EditorFor(model => model.ΥΠΟΔΙΕΥΘΥΝΤΗΣ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ΥΠΟΔΙΕΥΘΥΝΤΗΣ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10">
+                            @Html.LabelFor(model => model.ΥΠΟΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ, new { @class = "control-label col-md-3" })
+                            @(Html.Kendo().DropDownListFor(model => model.ΥΠΟΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ)
+                            .Name("ΥΠΟΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ")
+                            .DataTextField("GENDER")
+                            .DataValueField("GENDER_ID")
+                            .OptionLabel("Επιλογή...")
+                            .HtmlAttributes(new { style = "width:120px;" })
+                            .Filter(FilterType.Contains)
+                            .AutoBind(true)
+                            .DataSource(source => { source.Read(read => { read.Action("GetGenders", "Setup"); }).ServerFiltering(true); })
+                            )
+                            @Html.ValidationMessageFor(model => model.ΥΠΟΔΙΕΥΘΥΝΤΗΣ_ΦΥΛΟ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-md-10" style="margin-bottom:15px">
+                            @Html.LabelFor(model => model.ΠΕΡΙΦΕΡΕΙΑΚΗ, new { @class = "control-label col-md-3" })
+                            @(Html.Kendo().DropDownListFor(model => model.ΠΕΡΙΦΕΡΕΙΑΚΗ)
+                            .Name("ΠΕΡΙΦΕΡΕΙΑΚΗ")
+                            .DataTextField("PERIFERIAKI_TEXT")
+                            .DataValueField("PERIFERIAKI_ID")
+                            .HtmlAttributes(new { style = "width:520px;" })
+                            .Filter(FilterType.Contains)
+                            .AutoBind(true)
+                            .DataSource(source => { source.Read(read => { read.Action("GetPeriferiakes", "Setup"); }).ServerFiltering(true); })
+                            )
+                            @Html.ValidationMessageFor(model => model.ΠΕΡΙΦΕΡΕΙΑΚΗ, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </fieldset>
+    </div>
+}   @* ---  End of BeginForm ----------*@

@@ -1,0 +1,119 @@
+﻿@using Primus.DAL;
+@using Primus.Models;
+
+
+@{
+    ViewBag.Title = "Μητρώο αποφάσεων";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
+
+
+@Html.AntiForgeryToken()
+<div class="page-header" style="margin:5px 30px 5px 30px">
+    <span style="margin:5px 30px 5px 30px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+        <font style="color:#494949;float:left;font-family:'Segoe UI'">Μητρώο αποφάσεων</font>
+    </span>
+    <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+    <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+</div>
+
+<div class="body-content" style="margin:10px 30px 5px 30px;font-size:small">
+
+    @(Html.Kendo().Grid<ApofasiRegistryViewModel>()
+        .Name("Grid")
+        .AutoBind(true)
+        .HtmlAttributes(new { style = "display: block;font-size:12px" })
+        .Selectable()
+        .Filterable()
+        .Groupable()
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .Scrollable(scr => scr.Height(320))
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.ΟΝΟΜΑΤΕΠΩΝΥΜΟ).Width(24)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Bound(c => c.SCHOOLYEAR_TEXT).Width(12).Title("Σχ.έτος");
+            columns.Bound(c => c.SCHOOL_NAME).Width(25);
+            columns.Bound(c => c.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ).Width(25);
+            columns.Bound(c => c.ΕΓΓΡΑΦΟ_ΕΙΔΟΣ).Width(20);
+            columns.Bound(c => c.ΠΡΩΤΟΚΟΛΛΟ).Width(14).Title("Αρ.Πρωτ.");
+            columns.Bound(c => c.ΗΜΝΙΑ_ΣΥΝΤΑΞΗ).Width(18);
+            columns.Bound(c => c.ΑΠΟΦΑΣΗ_ΚΩΔ).Width(10).Hidden();
+
+        })
+        .DataSource(ds => ds
+            .Ajax()
+            .PageSize(60)
+            .ServerOperation(true)
+            .Model(model =>
+            {
+                model.Id(p => p.ID);
+            })
+            .Read(read => read.Action("ApofaseisRegistry_Read", "Apofaseis"))
+            .Events(events => events.Error("error_handler"))
+            //.Group(groups => groups.Add(p => p.SCHOOLYEAR_TEXT))
+            .Aggregates(a =>
+            {
+                a.Add(p => p.ΟΝΟΜΑΤΕΠΩΝΥΜΟ).Count();
+            })
+        )
+        .Events(events => events.Change("change"))
+    )
+
+</div>
+
+<div id="partialDiv" class="body-content" style="margin:15px 30px 5px 30px;font-size:small">
+    @Html.Partial("ApofaseisRegistryPartial")
+</div>
+
+<script id="events" type="text/javascript">
+
+    function change(e) {
+        var dataItem = this.dataItem(this.select());
+
+        var p = {
+            apofasiId: dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ,
+            apofasiType: dataItem.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ,
+            schoolyear: dataItem.SCHOOLYEAR_TEXT,
+            school: dataItem.SCHOOL_NAME
+        }
+
+        //MessageBoxAlert("aitisiID=" + aitisiID);
+        // Handle data source of partial view
+        $.ajax({
+            url: '@Url.Action("GetApofasiRegistryRecord", "Apofaseis")?apofasiId='+ p.apofasiId + '&apofasiType='+p.apofasiType + '&schoolyear=' + p.schoolyear + '&school='+ p.school,
+            type: 'GET',
+            data: "",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#partialDiv").html(data);
+            },
+            error: function () {
+                MessageBoxAlert("Προέκυψε σφάλμα δεδομένων. Δοκιμάστε πάλι αργότερα.");
+            }
+        });
+    }
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+
+    }
+
+</script>
+
+
+
+
+

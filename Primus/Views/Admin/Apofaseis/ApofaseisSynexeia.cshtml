@@ -1,0 +1,298 @@
+﻿@using Primus.DAL;
+@using Primus.Models;
+@{
+    ViewBag.Title = "Αποφάσεις συνέχειας";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
+
+@Html.AntiForgeryToken()
+<div class="page-header" style="margin:5px 30px 5px 30px">
+    <span style="margin:5px 30px 5px 30px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+        <font style="color:#494949;float:left;font-family:'Segoe UI'">Αποφάσεις συνέχειας επιδόματος</font>
+    </span>
+    <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+    <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+</div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;font-size:small">
+        @(Html.Kendo().Grid<ApofasiSynexeiaGridViewModel>()
+        .Name("Master")
+        .AutoBind(true)
+        .HtmlAttributes(new { style = "display: block;font-size:12px" })
+        .Navigatable()
+        .Filterable()
+        .Groupable()
+        .Selectable()
+        .Editable(editable => editable.Mode(GridEditMode.InLine).CreateAt(GridInsertRowPosition.Top))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .Scrollable(scr => scr.Height(320))
+        .Columns(columns =>
+        {
+            columns.ForeignKey(f => f.ΣΧΟΛΙΚΟ_ΕΤΟΣ, (IEnumerable<ΣΥΣ_ΣΧΟΛΙΚΑ_ΕΤΗ>)ViewData["schoolYears"], "SCHOOLYEAR_ID", "SCHOOLYEAR_TEXT").Width(16);
+            columns.ForeignKey(f => f.ΔΙΑΧΕΙΡΙΣΤΗΣ, (IEnumerable<Δ_ΔΙΑΧΕΙΡΙΣΤΕΣ>)ViewData["diaxiristes"], "ΔΙΑΧΕΙΡΙΣΤΗΣ_ΚΩΔ", "ΟΝΟΜΑΤΕΠΩΝΥΜΟ_ΠΛΗΡΕΣ").Width(30)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Bound(c => c.ΗΜΝΙΑ_ΣΥΝΤΑΞΗ).Width(22);
+            columns.ForeignKey(f => f.ΣΧΟΛΗ, (IEnumerable<ΣΥΣ_ΣΧΟΛΕΣ>)ViewData["schools"], "SCHOOL_ID", "SCHOOL_NAME").Width(40);
+            columns.ForeignKey(f => f.ΕΓΓΡΑΦΟ_ΕΙΔΟΣ, (IEnumerable<ΣΥΣ_ΕΓΓΡΑΦΑ_ΕΙΔΗ>)ViewData["doctypes"], "ΕΓΓΡΑΦΟ_ΕΙΔΟΣ_ΚΩΔ", "ΕΓΓΡΑΦΟ_ΕΙΔΟΣ").Width(20);
+            columns.Bound(c => c.ΑΠΟΦΑΣΗ_ΚΩΔ).Hidden();
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(36);
+            columns.Template(
+                @<text></text>)
+            .ClientTemplate(
+            "<a class=\"k-button k-button-icontext\" href='" + Url.Action("ApofasiSynexeiaEdit", "Apofaseis") + "?apofasiId=#=ΑΠΟΦΑΣΗ_ΚΩΔ#' target = _blank><span class=\"k-icon k-edit\"></span>Καρτέλα</a>"
+            ).Width(18);
+        })
+        .ToolBar(toolBar =>
+        {
+            toolBar.Create();
+        })
+        .DataSource(ds => ds
+            .Ajax()
+            .Batch(false)
+            .PageSize(40)
+            .ServerOperation(false)
+            .Model(model =>
+            {
+                model.Id(p => p.ΑΠΟΦΑΣΗ_ΚΩΔ);
+                model.Field(p => p.ΣΧΟΛΙΚΟ_ΕΤΟΣ).DefaultValue((int)ViewData["defaultSchoolYear"]);
+                model.Field(p => p.ΔΙΑΧΕΙΡΙΣΤΗΣ).DefaultValue(ViewData["defaultDiaxiristis"]);
+                model.Field(p => p.ΣΧΟΛΗ).DefaultValue(1);
+                model.Field(p => p.ΕΓΓΡΑΦΟ_ΕΙΔΟΣ).DefaultValue(1);
+            })
+            .Create(create => create.Action("ApofasiSynexeia_Create", "Apofaseis"))
+            .Read(read => read.Action("ApofasiSynexeia_Read", "Apofaseis"))
+            .Update(update => update.Action("ApofasiSynexeia_Update", "Apofaseis"))
+            .Destroy(delete => delete.Action("ApofasiSynexeia_Destroy", "Apofaseis"))
+            .Events(events => events.Error("error_handler"))
+            .Aggregates(a => { a.Add(p => p.ΔΙΑΧΕΙΡΙΣΤΗΣ).Count(); })
+        )
+        .Events(events => events.Change("change"))
+        )
+
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;background-color:dimgray;padding:2px 2px 2px 2px;min-height:40px">
+        <label style="font-size:13px;font-weight:bold;color:white;margin-top:6px">Για επίδομα : </label>
+        @(Html.Kendo().DropDownList()
+        .Name("ddlEpidoma")
+        .DataTextField("ΕΠΙΔΟΜΑ_ΚΕΙΜΕΝΟ")
+        .DataValueField("ΕΠΙΔΟΜΑ_ΚΩΔ")
+        .HtmlAttributes(new { style = "width:230px;font-size:13px;font-weight:bold;margin-top:4px" })
+        .OptionLabel("Επιλογή...")
+        .AutoBind(true)
+        .Enable(true)
+        .DataSource(source => { source.Read(read => { read.Action("GetEpidomaTypes", "Apofaseis"); }).ServerFiltering(true); })
+        .Events(e =>
+        {
+            e.Select("ddlselect");
+        })
+        )
+        <span style="margin:2px;float:right;font-family:'Segoe UI'">
+            <input style="font-family:'Segoe UI';font-size:13px" type="button" onclick="attachAitiseis()" value="Επισύναψη αιτήσεων" class="btn btn-default" />
+        </span>
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;font-size:small">
+
+        @(Html.Kendo().Grid<EpidomaSynexeiaViewModel>()
+        .Name("Child")
+        .AutoBind(false)
+        .HtmlAttributes(new { style = "display: block;font-size:12px" })
+        .Navigatable()
+        .Filterable()
+        .Editable(editable => editable.Mode(GridEditMode.InLine).CreateAt(GridInsertRowPosition.Top))
+        .Resizable(resize => resize.Columns(true))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .Scrollable(scr => scr.Height(200))
+        .Columns(columns =>
+        {
+            columns.ForeignKey(f => f.ΜΑΘΗΤΗΣ_ΚΩΔ, (IEnumerable<qrySTUDENT_SELECTOR>)ViewData["students"], "ΜΑΘΗΤΗΣ_ΚΩΔΙΚΟΣ", "ΟΝΟΜΑΤΕΠΩΝΥΜΟ").Width(30);
+            columns.ForeignKey(f => f.ΜΑΘΗΤΗΣ_ΕΙΔΙΚΟΤΗΤΑ, (IEnumerable<ΕΙΔΙΚΟΤΗΤΕΣ>)ViewData["eidikotites"], "EIDIKOTITA_ID", "EIDIKOTITA_TEXT").Width(50);
+            columns.ForeignKey(f => f.ΜΑΘΗΤΗΣ_ΤΑΞΗ, (IEnumerable<ΣΥΣ_ΤΑΞΕΙΣ>)ViewData["takseis"], "ΤΑΞΗ_ΚΩΔ", "ΤΑΞΗ_ΛΕΚΤΙΚΟ").Width(15);
+            columns.ForeignKey(f => f.ΕΠΙΔΟΜΑ_ΕΙΔΟΣ, (IEnumerable<ΣΥΣ_ΕΠΙΔΟΜΑΤΑ>)ViewData["epidomata"], "ΕΠΙΔΟΜΑ_ΚΩΔ", "ΕΠΙΔΟΜΑ_ΚΕΙΜΕΝΟ").Width(20);
+            columns.Bound(c => c.ΕΠΙΔΟΤΗΣΗ_ΚΩΔ).Width(10).Hidden();
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(34);
+            columns.Template(
+                @<text></text>)
+            .ClientTemplate(
+            "<a class=\"k-button k-button-icontext\" href='" + Url.Action("EpidomaSynexeiaEdit", "Apofaseis") + "?epidotisiId=#=ΕΠΙΔΟΤΗΣΗ_ΚΩΔ#' target = _blank><span class=\"k-icon k-edit\"></span>Στοιχεία αίτησης</a>"
+            ).Width(25);
+        })
+                .ToolBar(toolBar =>
+                {
+                    toolBar.Create();
+                })
+                .DataSource(ds => ds
+                .Ajax()
+                .Batch(false)
+                .PageSize(40)
+                .ServerOperation(false)
+                .Model(model =>
+                {
+                    model.Id(p => p.ΕΠΙΔΟΤΗΣΗ_ΚΩΔ);
+                    model.Field(p => p.ΜΑΘΗΤΗΣ_ΚΩΔ).DefaultValue(1);
+                    model.Field(p => p.ΜΑΘΗΤΗΣ_ΕΙΔΙΚΟΤΗΤΑ).DefaultValue(1);
+                    model.Field(p => p.ΜΑΘΗΤΗΣ_ΤΑΞΗ).DefaultValue(1);
+                    model.Field(p => p.ΕΠΙΔΟΜΑ_ΕΙΔΟΣ).DefaultValue(1);
+                })
+                .Create(create => create.Action("EpidomaSynexeia_Create", "Apofaseis").Data("data"))
+                .Read(read => read.Action("EpidomaSynexeia_Read", "Apofaseis").Data("data"))
+                .Update(update => update.Action("EpidomaSynexeia_Update", "Apofaseis").Data("data"))
+                .Destroy(delete => delete.Action("EpidomaSynexeia_Destroy", "Apofaseis"))
+                )
+        )
+
+    </div>
+
+<script type="text/javascript">
+
+    function attachAitiseis() {
+
+        var epidomaID = $("#ddlEpidoma").data("kendoDropDownList").value();
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+        var parameters = {
+            apofasiId: 0,
+            schoolyearId: 0,
+            schoolId: 0,
+            epidomaId: 0
+        };
+        if (dataItem && epidomaID) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                epidomaId: epidomaID
+            };
+            //MessageBoxAlert(parameters.schoolyearId + ", " + parameters.schoolId + ", " + parameters.epidomaId);
+            $.ajax({
+                url: '@Url.Action("ApofasiSynexeiaAttach", "Apofaseis")',
+                type: 'POST',
+                data: JSON.stringify(parameters),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#Child").data("kendoGrid").dataSource.read({ ep: parameters });
+                    $("#Child").css("display", "block");
+                },
+                error: function () {
+                    MessageBoxAlert("Προέκυψε σφάλμα. Δοκιμάστε πάλι αργότερα.");
+                }
+            });
+        }
+        else {
+            MessageBoxAlert("Για να γίνει η επισύναψη πρέπει πρώτα να επιλέξετε μια απόφαση και είδος επιδόματος.");
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    function ddlselect(e) {
+        var dataItem = this.dataItem(e.item.index());
+        var epidomaID = dataItem.ΕΠΙΔΟΜΑ_ΚΩΔ;
+        var masterGrid = $("#Master").data("kendoGrid");
+        var gridItem = masterGrid.dataItem(masterGrid.select());
+
+        var parameters = {
+            apofasiId: 0,
+            schoolyearId: 0,
+            schoolId: 0,
+            epidomaId: 0
+        };
+        if (gridItem && epidomaID) {
+            var apofasiID = gridItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = gridItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = gridItem.ΣΧΟΛΗ;
+            parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                epidomaId: epidomaID
+            };
+        }
+
+        $("#Child").data("kendoGrid").dataSource.read({ ep: parameters });
+        $("#Child").css("display", "block");
+    };
+
+    function data() {
+        var epidomaID = $("#ddlEpidoma").data("kendoDropDownList").value();
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+
+        if (dataItem && epidomaID) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            var parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                epidomaId: epidomaID,
+            };
+        }
+        else {
+            var parameters = {
+                apofasiId: 0,
+                schoolyearId: 0,
+                schoolId: 0,
+                epidomaId: 0
+            };
+        }
+        return parameters;
+    }
+
+    function RefreshGrid(e) {
+        var grid = $("#Master").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+    function change(e) {
+        var epidomaID = $("#ddlEpidoma").data("kendoDropDownList").value();
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+        if (dataItem && epidomaID) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            var parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                epidomaId: epidomaID,
+            };
+        }
+        else {
+            var parameters = {
+                apofasiId: 0,
+                schoolyearId: 0,
+                schoolId: 0,
+                epidomaId: 0
+            };
+        }
+        //MessageBoxAlert("parameters: " + parameters.apofasiId + "," + parameters.schoolyearId);
+        $("#Child").data("kendoGrid").dataSource.read({ ep: parameters });
+        $("#Child").css("display", "block");
+    }
+
+</script>
+

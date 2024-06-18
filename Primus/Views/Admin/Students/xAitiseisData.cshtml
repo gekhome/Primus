@@ -1,0 +1,142 @@
+﻿@using Primus.DAL;
+@using Primus.Models;
+
+
+@{
+    ViewBag.Title = "Αιτήσεις μαθητών";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
+
+
+@Html.AntiForgeryToken()
+<div class="page-header" style="margin:5px 30px 5px 30px">
+    <span style="margin:5px 30px 5px 30px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+        <font style="color:#494949;float:left;font-family:'Segoe UI'">Αιτήσεις μαθητών</font>
+    </span>
+    <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+    <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+    <button class="btn btn-danger" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="updateAitiseis()" title="Ενημέρωση όλων των αιτήσεων με τους κωδικούς αποφάσεων">Ενημέρωση κωδικών αποφάσεων</button>
+    <div id="divLoading" style="margin:0px 10px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px; z-index: 30001;display:none">
+        <p id="message-icon" style="margin-right:5px; font-size:13px;color:#00008b">
+            Ενημέρωση αιτήσεων σε εξέλιξη...<img id="ajax-icon" src="~/Images/other/progress4.gif" style="margin-left:5px;width:36px;height:36px">
+        </p>
+    </div>
+</div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;font-size:14px;background-color:dimgray;padding:4px 4px 4px 4px">
+        <label style="font-size:14px;font-weight:bold;color:white">Σχολικό έτος : </label>
+        @(Html.Kendo().DropDownList()
+            .Name("ddlSchoolYear")
+            .DataTextField("SCHOOLYEAR_TEXT")
+            .DataValueField("SCHOOLYEAR_ID")
+            .HtmlAttributes(new { style = "width:230px;font-size:14px;font-weight:bold" })
+            .OptionLabel("Επιλογή...")
+            .AutoBind(true)
+            .Enable(true)
+            .DataSource(source => { source.Read(read => { read.Action("GetSchoolYears", "Admin"); }).ServerFiltering(true); })
+            .Events(e =>
+            {
+                e.Select("ddlselect");
+            })
+        )
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;font-size:small">
+
+        @(Html.Kendo().Grid<sqlAitiseisViewModel>()
+        .Name("Grid")
+        .AutoBind(true)
+        .HtmlAttributes(new { style = "display: block;font-size:12px" })
+        .Selectable()
+        .Filterable()
+        .Groupable()
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .Scrollable(scr => scr.Height(400))
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.ΑΦΜ).Width(14);
+            columns.Bound(c => c.ΟΝΟΜΑΤΕΠΩΝΥΜΟ).Width(33)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Bound(c => c.SCHOOLYEAR_TEXT).Width(15);            
+            columns.Bound(c => c.SCHOOL_NAME).Width(27);
+            columns.Bound(c => c.EIDIKOTITA_TEXT).Width(56);
+            columns.Bound(c => c.ΤΑΞΗ_ΛΕΚΤΙΚΟ).Width(12);
+            columns.Bound(c => c.ΗΜΝΙΑ_ΑΙΤΗΣΗ).Width(14).Groupable(false).Title("Αίτηση");
+            columns.Bound(c => c.ΑΙΤΗΣΗ_ΚΩΔ).Hidden();
+            columns.Bound(c => c.ΣΧΟΛΙΚΟ_ΕΤΟΣ).Hidden();
+            columns.Template(
+                @<text></text>)
+            .ClientTemplate(
+            "<a class=\"k-button k-button-icontext\" href='" + Url.Action("xAitisiEdit", "Admin") + "?aitisiId=#=ΑΙΤΗΣΗ_ΚΩΔ#' target = _blank><span class=\"k-icon k-edit\"></span>Στοιχεία αίτησης</a>"
+            ).Width(25);
+
+        })
+        .DataSource(ds => ds
+            .Ajax()
+            .PageSize(60)
+            .ServerOperation(true)
+            .Model(model =>
+            {
+                model.Id(p => p.ΑΙΤΗΣΗ_ΚΩΔ);
+            })
+            .Read(read => read.Action("Aitiseis_Read", "Admin"))
+            .Events(events => events.Error("error_handler"))
+            //.Group(groups => groups.Add(p => p.SCHOOL_NAME))
+            .Aggregates(a =>
+            {
+                a.Add(p => p.ΟΝΟΜΑΤΕΠΩΝΥΜΟ).Count();
+            })
+        )
+        //.Events(events => events.Change("change"))
+        )
+
+    </div>
+
+<script type="text/javascript">
+
+    function ddlselect(e) {
+        var dataItem = this.dataItem(e.item.index());
+
+        if (dataItem) {
+            var syearID = dataItem.SCHOOLYEAR_ID;
+            $("#Grid").data("kendoGrid").dataSource.read({ schoolyearId: syearID });
+            $("#Grid").css("display", "block");
+        }
+    };
+
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+    function updateAitiseis() {
+        $('#divLoading').show();
+        $.ajax({
+            url: '@Url.Action("UpdateAitiseisApofasiCode", "Admin")',
+            type: 'POST',
+            data: "",
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                $('#divLoading').hide();
+                if (result) MessageBoxAlert(result, "Μήνυμα");
+            },
+            error: function () {
+                MessageBoxAlert("Προέκυψε σφάλμα ανάκτησης δεδομένων.");
+            }
+        });
+    }
+
+</script>
+

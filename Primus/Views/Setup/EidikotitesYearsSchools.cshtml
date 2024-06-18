@@ -1,0 +1,150 @@
+﻿@using Primus.DAL;
+@using Primus.Models;
+
+@{
+    ViewBag.Title = "Ειδικότητες σχολών";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+    @Html.AntiForgeryToken()
+    <div class="page-header" style="margin:5px 30px 5px 30px">
+        <span style="margin:5px 30px 5px 0px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+            <font style="color:#494949;font-family:'Segoe UI'">Ειδικότητες σχολών ΕΠΑΣ, ΣΕΚ-ΠΣΕΚ</font>
+        </span>
+        <span style="margin:5px 10px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+        <button class="btn btn-success" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px">
+        @(Html.Kendo().Grid<SysSchoolYearViewModel>()
+        .Name("Master")
+        .Columns(columns =>
+        {
+            columns.Bound(m => m.SCHOOLYEAR_TEXT).Width(25);
+            columns.Bound(m => m.DATE_START).Width(25);
+            columns.Bound(m => m.DATE_END).Width(25);
+            columns.Bound(m => m.SCHOOLYEAR_ID).Hidden();
+        })
+        .HtmlAttributes(new { style = "font-size:14px" })
+        .Filterable()
+        .Selectable()
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(240))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .DataSource(datasource => datasource
+        .Ajax()
+        .Batch(false)
+        .PageSize(20)
+        .ServerOperation(false)
+        .Model(model =>
+        {
+            model.Id(p => p.SCHOOLYEAR_ID);
+        })
+        .Read(read => read.Action("SchoolYear_Read", "Setup"))
+        ) @* datasource*@
+        .Events(events => events.Change("change"))
+        )
+
+        <p></p>
+
+        @(Html.Kendo().Grid<EidikotitaYearSchoolViewModel>()
+        .Name("Child")
+        .Columns(columns =>
+        {
+            columns.ForeignKey(m => m.SCHOOL_ID, (IEnumerable<ΣΥΣ_ΣΧΟΛΕΣ>)ViewData["schools"], "SCHOOL_ID", "SCHOOL_NAME").Width(40);
+            columns.ForeignKey(f => f.EIDIKOTITA_ID, (IEnumerable<ΕΙΔΙΚΟΤΗΤΕΣ>)ViewData["eidikotites"], "EIDIKOTITA_ID", "EIDIKOTITA_TEXT").Width(80)
+                .ClientFooterTemplate("Ολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(34);
+        })
+
+        .ToolBar(toolBar =>
+        {
+            toolBar.Create();
+        })
+        .Filterable()
+        .Navigatable()
+        .Groupable()
+        .HtmlAttributes(new { style = "font-size:12px"})
+        .Editable(editable => editable.Mode(GridEditMode.InLine).CreateAt(GridInsertRowPosition.Top))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(340))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .DataSource(datasource => datasource
+        .Ajax()
+        .Batch(false)
+        .PageSize(40)
+        .ServerOperation(false)
+        .Model(model =>
+        {
+            model.Id(p => p.SYE_ID);
+            model.Field(p => p.SCHOOL_ID).DefaultValue(1);
+            model.Field(p => p.EIDIKOTITA_ID).DefaultValue(1);
+        })
+        .Create(create => create.Action("SchoolEidikotita_Create", "Setup").Data("getSchoolYear"))
+        .Read(read => read.Action("SchoolEidikotita_Read", "Setup"))
+        .Update(update => update.Action("SchoolEidikotita_Update", "Setup").Data("getSchoolYear"))
+        .Destroy(delete => delete.Action("SchoolEidikotita_Destroy", "Setup"))
+        .Group(groups => groups.Add(p => p.SCHOOL_ID))
+        .Aggregates(a =>
+        {
+            a.Add(p => p.EIDIKOTITA_ID).Count();
+        })
+        .Events(events => events.Error("error_handler"))
+        ) @* datasource*@
+        )
+
+    </div>
+
+<script type="text/javascript">
+
+    function getSchoolYear() {
+        var masterGrid = $("#Master").data("kendoGrid");
+        // get data item for selected row
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+        if (dataItem) {
+            return { schoolyearId: dataItem.SCHOOLYEAR_ID };
+        }
+        else {
+            return 0;
+        }
+    }
+
+    function change(e) {
+        var dataItem = this.dataItem(this.select());
+        var schoolyearID = 0;
+        if (dataItem) {
+            schoolyearID = dataItem.SCHOOLYEAR_ID;
+        }
+
+        $("#Child").data("kendoGrid").dataSource.read({ schoolyearId: schoolyearID });
+        $("#Child").css("display", "block");
+    }
+
+    function RefreshGrid(e) {
+        var grid = $("#Child").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "<br/>";
+                    });
+                }
+            });
+            MessageBoxAlert(message, "Σφάλμα");
+            $("#Child").data("kendoGrid").dataSource.read();
+        }
+    }
+
+</script>

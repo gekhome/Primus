@@ -1,0 +1,127 @@
+﻿@using Primus.DAL;
+@using Primus.Models;
+
+
+@{
+    ViewBag.Title = "Συγκεντρωτικό (2)";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
+
+
+@Html.AntiForgeryToken()
+<div class="page-header" style="margin:5px 20px 5px 20px">
+    <span style="margin:5px 20px 5px 20px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+        <font style="color:#494949;float:left;font-family:'Segoe UI'">Συγκεντρωτικό ανά Περιφερειακή και σχολείο</font>
+    </span>
+    <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+    <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+    <span style="margin:5px 5px 5px 10px;float:right;font-family:'Segoe UI';font-size:14px">
+        @Html.ActionLink("Εκτύπωση", "SumEpidomaAllTypesPrint", "Admin", null, new { @class = "btn btn-primary", style = "font-size:14px", target = "_blank" })
+    </span>
+</div>
+
+<div class="body-content" style="margin:10px 20px 5px 20px;font-size:small">
+
+    @(Html.Kendo().Grid<SumEpidomaAllTypesViewModel>()
+        .Name("Grid")
+        .AutoBind(true)
+        .HtmlAttributes(new { style = "display: block;font-size:11px" })
+        .Selectable()
+        .Filterable()
+        .Groupable()
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .Scrollable(scr => scr.Height(420))
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.SCHOOLYEAR_TEXT).Width(14);
+            columns.Bound(c => c.SCHOOL_NAME).Width(30);
+            columns.Bound(c => c.PERIFERIAKI_TEXT).Width(48);
+            columns.Bound(c => c.ΠΛΗΘΟΣ).Width(16)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=sum#")
+                .ClientGroupFooterTemplate("Πλήθος: #=sum#");
+            columns.Bound(c => c.ΣΤΕΓΑΣΗ_ΕΤΟΣ).Width(22)
+                .ClientFooterTemplate("Γεν. σύνολο: #= kendo.toString(sum, '0.0 €') #")
+                .ClientGroupFooterTemplate("Σύνολο: #= kendo.toString(sum, '0.0 €') #");
+            columns.Bound(c => c.ΣΙΤΙΣΗ_ΕΤΟΣ).Width(22)
+                .ClientFooterTemplate("Γεν. σύνολο: #= kendo.toString(sum, '0.0 €') #")
+                .ClientGroupFooterTemplate("Σύνολο: #= kendo.toString(sum, '0.0 €') #");
+            columns.Bound(c => c.ΣΤΕΓΑΣΗ_ΜΗΝΑΣ).Width(22)
+                .ClientFooterTemplate("Γεν. σύνολο: #= kendo.toString(sum, '0.0 €') #")
+                .ClientGroupFooterTemplate("Σύνολο: #= kendo.toString(sum, '0.0 €') #");
+            columns.Bound(c => c.ΣΙΤΙΣΗ_ΜΗΝΑΣ).Width(22)
+                .ClientFooterTemplate("Γεν. σύνολο: #= kendo.toString(sum, '0.0 €') #")
+                .ClientGroupFooterTemplate("Σύνολο: #= kendo.toString(sum, '0.0 €') #");
+
+        })
+        .DataSource(ds => ds
+            .Ajax()
+            .PageSize(40)
+            .ServerOperation(true)
+            .Model(model =>
+            {
+                model.Id(p => p.ID);
+            })
+            .Read(read => read.Action("SumEpidomaAllTypes_Read", "Apofaseis"))
+            .Events(events => events.Error("error_handler"))
+            //.Group(groups => groups.Add(p => p.SCHOOLYEAR_TEXT))
+            .Aggregates(a =>
+            {
+                a.Add(p => p.ΣΤΕΓΑΣΗ_ΕΤΟΣ).Sum();
+                a.Add(p => p.ΣΙΤΙΣΗ_ΕΤΟΣ).Sum();
+                a.Add(p => p.ΣΤΕΓΑΣΗ_ΜΗΝΑΣ).Sum();
+                a.Add(p => p.ΣΙΤΙΣΗ_ΜΗΝΑΣ).Sum();
+                a.Add(p => p.ΠΛΗΘΟΣ).Sum();
+            })
+        )
+    //.Events(events => events.Change("change"))
+    )
+
+</div>
+
+@*<div id="partialDiv" class="body-content" style="margin:15px 20px 5px 20px;font-size:small">
+    @Html.Partial("EpidomaOlikoPartial")
+</div>*@
+
+<script id="events" type="text/javascript">
+
+    function change(e) {
+        var dataItem = this.dataItem(this.select());
+        var recordID = dataItem.ID;
+        //MessageBoxAlert("epidomaID=" + epidomaID);
+        // Handle data source of partial view
+        $.ajax({
+            url: '@Url.Action("GetEpidotisiOlikoRecord", "Apofaseis")?recordId=' + recordID,
+            type: 'GET',
+            data: "",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#partialDiv").html(data);
+            },
+            error: function () {
+                MessageBoxAlert("Προέκυψε σφάλμα δεδομένων. Δοκιμάστε πάλι αργότερα.");
+            }
+        });
+    }
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+
+    }
+
+</script>
+
+
+
+
+

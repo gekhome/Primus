@@ -1,0 +1,106 @@
+﻿@model sqlEpidomaSitisiSchoolViewModel
+@using Primus.DAL;
+@using Primus.Models;
+@{
+    Layout = null;
+    string poso_stegasi = string.Format("{0:N2} €", Model.ΣΤΕΓΑΣΗ_ΠΟΣΟ);
+    string poso_sitisi = string.Format("{0:N2} €", Model.ΣΙΤΙΣΗ_ΠΟΣΟ);
+    string date_apo = "";
+    Nullable<DateTime> dt = Model.ΗΜΝΙΑ_ΑΠΟ;
+    date_apo = dt.HasValue ? dt.Value.ToString("dd-MM-yyyy") : string.Empty;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <style scoped="scoped">
+        .k-detail-cell .k-tabstrip .k-content {
+            padding: 0.2em;
+        }
+
+        .student-details ul {
+            list-style: none;
+            font-style: italic;
+            margin: 10px;
+            padding: 0;
+        }
+
+        .student-details ul li {
+            margin: 0;
+            line-height: 1.7em;
+        }
+
+        .student-details label {
+            display: inline-block;
+            width: 200px;
+            padding-right: 10px;
+            text-align: right;
+            font-style: normal;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body-content" style="margin:5px 0px 5px 0px;font-size:small;">
+
+        @(Html.Kendo().PanelBar()
+        .Name("info")
+        .Items(items =>
+        {
+            items.Add()
+                .Text("Λοιπά στοιχεία επιδότησης")
+                .Selected(true)
+                .Expanded(true)
+                .Content(
+                @<text>
+                <div class="student-details">
+                    <table>
+                        <tr>
+                            <td style="min-width:500px">
+                                <ul>
+                                    <li>
+                                        <label>Ειδικότητα:</label><font style="font-size:11px">@Model.EIDIKOTITA_TEXT</font>
+                                    </li>
+                                    <li>
+                                        <label>Τάξη:</label>@Model.ΤΑΞΗ_ΛΕΚΤΙΚΟ
+                                    </li>
+                                    <li>
+                                        <label>Ημερομηνία από:</label>@date_apo
+                                    </li>
+                                    <li>
+                                        <label>Μηνιαίο ποσό στέγασης:</label>@poso_stegasi
+                                    </li>
+                                    <li>
+                                        <label>Μηνιαίο ποσό σίτισης:</label>@poso_sitisi
+                                    </li>
+                                </ul>
+                            </td>
+                            <td style="min-width:500px">
+                                <ul>
+                                    <li>
+                                        <label>Είδος επιδόματος:</label>@Model.ΕΠΙΔΟΜΑ_ΚΕΙΜΕΝΟ
+                                    </li>
+                                    <li>
+                                        <label>Είδος απόφασης:</label>@Model.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ
+                                    </li>
+                                    <li>
+                                        <label>Ονοματεπώνυμο μαθητή:</label>@Model.ΟΝΟΜΑΤΕΠΩΝΥΜΟ
+                                    </li>
+                                    <li>
+                                        <label>Σχολική μονάδα:</label>@Model.SCHOOL_NAME
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </text>);
+            })
+    )
+    </div>
+</body>
+</html>

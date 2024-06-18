@@ -1,0 +1,20 @@
+﻿@using System.Collections
+@using Primus.Models
+@using Primus.DAL
+@model int
+
+@(Html.Kendo().DropDownListFor(m => m)
+    .AutoBind(false)
+    .DataValueField("ΜΑΘΗΤΗΣ_ΚΩΔΙΚΟΣ")
+    .DataTextField("ΟΝΟΜΑΤΕΠΩΝΥΜΟ")
+    .OptionLabel("Επιλογή μαθητή...")
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Action("EidikotitaStudentRead", "School").Data("filterStudents");
+        }).ServerFiltering(true);
+    })
+    .CascadeFrom("ΕΙΔΙΚΟΤΗΤΑ")
+)
+@Html.ValidationMessageFor(m => m)
